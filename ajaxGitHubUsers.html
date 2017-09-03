@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Ajax - External API</title>
+	<style>
+			.user{
+				display: flex;
+				background-color: #f4f4f4;
+				padding:10px;
+				margin-bottom: 10px;
+			}
+			.user ul{
+				list-style:none;
+			}
+	</style>
+</head>
+<body>	
+	<button id="button">Load GitHubUsers</button>
+	<button id="button1">Clear GitHubUsers</button>
+	<br><br>
+	<h1>GitHub Users</h1>
+	<div id="users"></div>
+	<script>
+		document.getElementById('button').addEventListener('click', loadUsers);
+
+		//load github users
+		function loadUsers(){
+			var xhr = new XMLHttpRequest();
+				xhr.open("GET", "https://api.github.com/users", true);
+				xhr.onload = function(){
+					if(this.status==200){
+						var users = JSON.parse(this.responseText);
+
+						// display gitHub users on browsers
+						var output = "";
+						for(var i in users){
+							output +=
+								'<div class="user">' +
+								'<img src="'+ users[i].avatar_url +'" width="100" height="100">' +
+								'<ul>'+
+									'<ul>ID:'+ users[i].id+ '</ul>' +
+									'<ul>Login:'+ users[i].login+ '</ul>'+
+									'<ul>HTML URL: <a href='+ users[i].html_url+'>'+users[i].html_url+'</a></ul>'+
+									'<ul>Follwer URL:<a href='+ users[i].followers_url+'>'+users[i].followers_url+'</a></ul>'+
+									'<ul>Repos URL:<a href='+ users[i].repos_url+'>'+users[i].repos_url+'</a></ul>'
+								+'</ul>'								
+								+'</div>';
+						}
+						document.getElementById('users').innerHTML = output;
+					}
+				}
+				xhr.send();
+		}
+		document.getElementById('button1').addEventListener('click', clearUsers);
+		function clearUsers(){
+			  document.getElementById('users').innerHTML = "";
+		}
+	</script>
+</body>
+</html>
